@@ -1,0 +1,89 @@
+/* Token Light Source - HUD button styles */
+
+.tls-toggle {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.tls-toggle:hover {
+  opacity: 1.0;
+  transform: scale(1.1);
+}
+
+.tls-toggle.active {
+  opacity: 1.0;
+  color: #f8c377;
+  text-shadow: 0 0 8px #f8a030, 0 0 16px #f06000;
+}
+
+.tls-toggle.active i {
+  animation: tls-flicker 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes tls-flicker {
+  0%   { opacity: 0.85; transform: scale(1.0); }
+  50%  { opacity: 1.0;  transform: scale(1.05); }
+  100% { opacity: 0.9;  transform: scale(0.98); }
+}
+
+/* Vision toggle button */
+.tls-vision-toggle {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.tls-vision-toggle:hover {
+  opacity: 1.0;
+  transform: scale(1.1);
+}
+
+.tls-vision-toggle.active {
+  opacity: 1.0;
+  color: #7ecbff;
+  text-shadow: 0 0 8px #3090e0, 0 0 16px #1060c0;
+}
+
+/* Preset picker dialog */
+.tls-preset-picker {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  padding: 8px;
+}
+
+.tls-preset-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.05);
+  transition: background 0.15s;
+}
+
+.tls-preset-option:hover {
+  background: rgba(248, 195, 119, 0.2);
+  border-color: #f8c377;
+}
+
+.tls-preset-option.active {
+  background: rgba(248, 195, 119, 0.3);
+  border-color: #f8a030;
+  font-weight: bold;
+}
+
+.tls-preset-option i {
+  width: 16px;
+  text-align: center;
+  color: #f8a030;
+}
+
+.tls-preset-option small {
+  margin-left: auto;
+  color: #888;
+  font-size: 0.75em;
+}
