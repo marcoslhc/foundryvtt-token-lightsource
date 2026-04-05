@@ -10,6 +10,8 @@ import {
   getCurrentPresetKey,
   getNextPresetKey,
   applyLightPreset,
+  PresetKeys,
+  LightPreset,
 } from "./light-sources.js";
 
 import {
@@ -20,12 +22,6 @@ import {
 } from "./vision-sources.js";
 
 const MODULE_ID = "token-lightsource";
-
-type ModuleSettings = {
-  [MODULE_ID]: {
-    defaultPreset: string;
-  };
-};
 
 // ─── Settings Registration ───────────────────────────────────────────────────
 
@@ -91,7 +87,7 @@ Hooks.on(
       const cur = getCurrentPresetKey(token);
       const next =
         cur === "none"
-          ? (game.settings?.get(MODULE_ID, "defaultPreset") as string)
+          ? (game.settings?.get(MODULE_ID, "defaultPreset") as PresetKeys)
           : getNextPresetKey(cur);
       await applyLightPreset(token, next);
       (hud as TokenHUD).render();
@@ -144,16 +140,18 @@ async function showPresetDialog(token: Token, hud: TokenHUD): Promise<void> {
   await (foundry.applications.api as any).DialogV2.wait({
     window: { title: game.i18n?.localize("TOKEN_LIGHTSOURCE.DIALOG.title") },
     rejectClose: false,
-    buttons: Object.entries(LIGHT_PRESETS).map(([key, preset]) => ({
-      action: key,
-      icon: `<i class="${preset.icon}"></i>`,
-      label: game.i18n?.localize(preset.label),
-      class: key === currentKey ? "active" : "",
-      callback: async () => {
-        await applyLightPreset(token, key);
-        hud.render();
-      },
-    })),
+    buttons: (Object.entries(LIGHT_PRESETS) as [PresetKeys, LightPreset][]).map(
+      ([key, preset]) => ({
+        action: key,
+        icon: `<i class="${preset.icon}"></i>`,
+        label: game.i18n?.localize(preset.label),
+        class: key === currentKey ? "active" : "none",
+        callback: async () => {
+          await applyLightPreset(token, key);
+          hud.render();
+        },
+      }),
+    ),
   });
 }
 
