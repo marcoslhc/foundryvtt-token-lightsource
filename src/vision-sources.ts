@@ -6,7 +6,18 @@
  * Uses the FoundryVTT v10+ token sight document fields.
  * Note: "devilsSight" visionMode requires D&D 5e or a system that defines it.
  */
-export const VISION_PRESETS = {
+
+interface VisionPreset {
+  label: string;
+  icon: string;
+  sight: {
+    enabled: boolean;
+    range: number;
+    visionMode: string;
+  };
+}
+
+export const VISION_PRESETS: Record<string, VisionPreset> = {
   none: {
     label: "TOKEN_LIGHTSOURCE.VISION.none",
     icon: "fas fa-eye-slash",
@@ -66,14 +77,14 @@ export const VISION_PRESETS = {
 /**
  * Returns true if the token currently has vision enabled.
  */
-export function tokenHasVision(token) {
+export function tokenHasVision(token: Token): boolean {
   return token.document.sight?.enabled === true;
 }
 
 /**
  * Gets the key of the currently active vision preset, or "none".
  */
-export function getCurrentVisionPresetKey(token) {
+export function getCurrentVisionPresetKey(token: Token): string {
   const sight = token.document.sight;
   if (!sight?.enabled) return "none";
   for (const [key, preset] of Object.entries(VISION_PRESETS)) {
@@ -91,24 +102,27 @@ export function getCurrentVisionPresetKey(token) {
 
 /**
  * Applies a vision preset to a token.
- * @param {Token} token - The token placeable object
- * @param {string} presetKey - Key from VISION_PRESETS
+ * @param token - The token placeable object
+ * @param presetKey - Key from VISION_PRESETS
  */
-export async function applyVisionPreset(token, presetKey) {
+export async function applyVisionPreset(token: Token, presetKey: string): Promise<void> {
   const preset = VISION_PRESETS[presetKey];
   if (!preset) {
     console.warn(`token-lightsource | Unknown vision preset: ${presetKey}`);
     return;
   }
 
-  if (!token.document.canUserModify(game.user, "update")) {
-    ui.notifications.warn(game.i18n.localize("TOKEN_LIGHTSOURCE.WARN.noPermission"));
+  if (!token.document.canUserModify(game.user!, "update")) {
+    ui?.notifications?.warn(
+      game.i18n?.localize("TOKEN_LIGHTSOURCE.WARN.noPermission") ?? "",
+    );
     return;
   }
 
-  await token.document.update({
+  const updateData: Record<string, unknown> = {
     "sight.enabled": preset.sight.enabled,
     "sight.range": preset.sight.range,
-    "sight.visionMode": preset.sight.visionMode
-  });
+    "sight.visionMode": preset.sight.visionMode,
+  };
+  await token.document.update(updateData);
 }

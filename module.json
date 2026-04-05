@@ -2,15 +2,19 @@
   "id": "token-lightsource",
   "title": "Token Light Source",
   "description": "Adds a light source toggle button to the Token HUD, allowing tokens to emanate configurable light (torch, candle, lantern, etc.).",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "authors": [
     {
       "name": "Marcos L Hernandez C",
       "url": "https://github.com/marcoslhc"
     }
   ],
-  "esmodules": ["scripts/main.js"],
-  "styles": ["styles/module.css"],
+  "esmodules": [
+    "scripts/main.js"
+  ],
+  "styles": [
+    "styles/module.css"
+  ],
   "languages": [
     {
       "lang": "en",
