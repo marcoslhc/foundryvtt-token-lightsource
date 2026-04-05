@@ -3,7 +3,7 @@
 /**
  * Light source preset definitions.
  * Each preset defines the light properties to apply to a token.
- * Compatible with FoundryVTT v10+ token.document.update() API.
+ * Compatible with FoundryVTT v13+.
  */
 export const LIGHT_PRESETS = {
   none: {
@@ -97,8 +97,8 @@ export const LIGHT_PRESETS = {
   }
 };
 
-// Ordered cycle for left-click toggling
-export const PRESET_CYCLE = ["none", "candle", "torch", "lantern", "none"];
+// Ordered cycle for left-click toggling (excludes "none" — turning on is handled via defaultPreset)
+export const PRESET_CYCLE = ["candle", "torch", "lantern", "none"];
 
 /**
  * Determines if a token currently has any light enabled.
@@ -136,7 +136,7 @@ export function getNextPresetKey(currentKey) {
 }
 
 /**
- * Applies a preset to a token using the FoundryVTT v10+ document update API.
+ * Applies a preset to a token.
  * @param {Token} token - The token placeable object
  * @param {string} presetKey - Key from LIGHT_PRESETS
  */

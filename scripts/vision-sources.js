@@ -1,5 +1,5 @@
 // Vision preset definitions for token-lightsource module
-// Compatible with FoundryVTT v10+ sight API
+// Compatible with FoundryVTT v13+
 
 /**
  * Vision preset definitions.
@@ -90,7 +90,7 @@ export function getCurrentVisionPresetKey(token) {
 }
 
 /**
- * Applies a vision preset to a token using the FoundryVTT v10+ document update API.
+ * Applies a vision preset to a token.
  * @param {Token} token - The token placeable object
  * @param {string} presetKey - Key from VISION_PRESETS
  */

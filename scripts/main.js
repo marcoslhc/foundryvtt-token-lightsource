@@ -1,7 +1,7 @@
 /**
  * Token Light Source - Main Module
  * Adds a light source toggle button to the Token HUD.
- * Compatible with FoundryVTT v10/v11/v12
+ * Compatible with FoundryVTT v13+
  */
 
 import {
@@ -56,61 +56,50 @@ Hooks.on("renderTokenHUD", (hud, html, data) => {
   const token = hud.token ?? hud.object;
   if (!token) return;
 
-  // Respect GM-only setting
   const gmOnly = game.settings.get(MODULE_ID, "gmOnly");
   if (gmOnly && !game.user.isGM) return;
 
-  // Check basic update permission
   if (!token.document.canUserModify(game.user, "update")) return;
 
+  // ─── Light button ─────────────────────────────────────────────────────────
   const hasLight = tokenHasLight(token);
   const currentKey = getCurrentPresetKey(token);
 
-  // Build the HUD button
-  const button = $(`
-    <div class="control-icon tls-toggle ${hasLight ? "active" : ""}"
-         title="${game.i18n.localize("TOKEN_LIGHTSOURCE.HUD.toggle")}"
-         data-preset="${currentKey}">
-      <i class="fas fa-fire"></i>
-    </div>
-  `);
+  const button = document.createElement("div");
+  button.className = `control-icon tls-toggle${hasLight ? " active" : ""}`;
+  button.title = game.i18n.localize("TOKEN_LIGHTSOURCE.HUD.toggle");
+  button.dataset.preset = currentKey;
+  // Icon markup is a hardcoded string — not user input
+  button.innerHTML = `<i class="fas fa-fire"></i>`;
 
-  // Left-click: cycle to next preset (respects defaultPreset when turning on from off)
-  button.on("click", async (event) => {
+  button.addEventListener("click", async (event) => {
     event.preventDefault();
     event.stopPropagation();
     const cur = getCurrentPresetKey(token);
-    let next;
-    if (cur === "none") {
-      next = game.settings.get(MODULE_ID, "defaultPreset");
-    } else {
-      next = getNextPresetKey(cur);
-    }
+    const next = cur === "none"
+      ? game.settings.get(MODULE_ID, "defaultPreset")
+      : getNextPresetKey(cur);
     await applyLightPreset(token, next);
     hud.render();
   });
 
-  // Right-click: show preset picker dialog
-  button.on("contextmenu", async (event) => {
+  button.addEventListener("contextmenu", async (event) => {
     event.preventDefault();
     event.stopPropagation();
     await showPresetDialog(token, hud);
   });
 
-  // ─── Vision button ──────────────────────────────────────────────────────────
+  // ─── Vision button ────────────────────────────────────────────────────────
   const hasVision = tokenHasVision(token);
   const currentVisionKey = getCurrentVisionPresetKey(token);
 
-  const visionButton = $(`
-    <div class="control-icon tls-vision-toggle ${hasVision ? "active" : ""}"
-         title="${game.i18n.localize("TOKEN_LIGHTSOURCE.HUD.toggleVision")}"
-         data-vision="${currentVisionKey}">
-      <i class="fas fa-eye"></i>
-    </div>
-  `);
+  const visionButton = document.createElement("div");
+  visionButton.className = `control-icon tls-vision-toggle${hasVision ? " active" : ""}`;
+  visionButton.title = game.i18n.localize("TOKEN_LIGHTSOURCE.HUD.toggleVision");
+  visionButton.dataset.vision = currentVisionKey;
+  visionButton.innerHTML = `<i class="fas fa-eye"></i>`;
 
-  // Left-click: toggle vision on (basic) / off
-  visionButton.on("click", async (event) => {
+  visionButton.addEventListener("click", async (event) => {
     event.preventDefault();
     event.stopPropagation();
     const cur = getCurrentVisionPresetKey(token);
@@ -119,90 +108,52 @@ Hooks.on("renderTokenHUD", (hud, html, data) => {
     hud.render();
   });
 
-  // Right-click: show vision picker dialog
-  visionButton.on("contextmenu", async (event) => {
+  visionButton.addEventListener("contextmenu", async (event) => {
     event.preventDefault();
     event.stopPropagation();
     await showVisionDialog(token, hud);
   });
 
-  // Inject both buttons into the right column
-  html.find(".col.right").prepend(visionButton);
-  html.find(".col.right").prepend(button);
+  html.querySelector(".col.right").prepend(visionButton);
+  html.querySelector(".col.right").prepend(button);
 });
 
-// ─── Preset Picker Dialog ────────────────────────────────────────────────────
-
-async function showVisionDialog(token, hud) {
-  const currentKey = getCurrentVisionPresetKey(token);
-
-  const presetOptions = Object.entries(VISION_PRESETS)
-    .map(([key, preset]) => `
-      <div class="tls-preset-option ${key === currentKey ? "active" : ""}" data-key="${key}">
-        <i class="${preset.icon}"></i>
-        <span>${game.i18n.localize(preset.label)}</span>
-        ${preset.sight.range > 0 ? `<small>${preset.sight.range} ft</small>` : ""}
-      </div>
-    `).join("");
-
-  const content = `<div class="tls-preset-picker">${presetOptions}</div>`;
-
-  let dialog;
-  dialog = new Dialog({
-    title: game.i18n.localize("TOKEN_LIGHTSOURCE.VISION_DIALOG.title"),
-    content,
-    buttons: {
-      close: {
-        label: game.i18n.localize("TOKEN_LIGHTSOURCE.DIALOG.close"),
-        callback: () => {}
-      }
-    },
-    render: (dialogHtml) => {
-      dialogHtml.find(".tls-preset-option").on("click", async (event) => {
-        const key = $(event.currentTarget).data("key");
-        await applyVisionPreset(token, key);
-        dialog.close();
-        hud.render();
-      });
-    },
-    default: "close"
-  });
-  dialog.render(true);
-}
+// ─── Preset Picker Dialogs ───────────────────────────────────────────────────
 
 async function showPresetDialog(token, hud) {
   const currentKey = getCurrentPresetKey(token);
 
-  const presetOptions = Object.entries(LIGHT_PRESETS)
-    .map(([key, preset]) => `
-      <div class="tls-preset-option ${key === currentKey ? "active" : ""}" data-key="${key}">
-        <i class="${preset.icon}"></i>
-        <span>${game.i18n.localize(preset.label)}</span>
-        ${key !== "none" ? `<small>${LIGHT_PRESETS[key].light.bright}/${LIGHT_PRESETS[key].light.dim} ft</small>` : ""}
-      </div>
-    `).join("");
-
-  const content = `<div class="tls-preset-picker">${presetOptions}</div>`;
-
-  let dialog;
-  dialog = new Dialog({
-    title: game.i18n.localize("TOKEN_LIGHTSOURCE.DIALOG.title"),
-    content,
-    buttons: {
-      close: {
-        label: game.i18n.localize("TOKEN_LIGHTSOURCE.DIALOG.close"),
-        callback: () => {}
-      }
-    },
-    render: (dialogHtml) => {
-      dialogHtml.find(".tls-preset-option").on("click", async (event) => {
-        const key = $(event.currentTarget).data("key");
+  await foundry.applications.api.DialogV2.wait({
+    window: { title: game.i18n.localize("TOKEN_LIGHTSOURCE.DIALOG.title") },
+    rejectClose: false,
+    buttons: Object.entries(LIGHT_PRESETS).map(([key, preset]) => ({
+      action: key,
+      icon: `<i class="${preset.icon}"></i>`,
+      label: game.i18n.localize(preset.label),
+      class: key === currentKey ? "active" : "",
+      callback: async () => {
         await applyLightPreset(token, key);
-        dialog.close();
         hud.render();
-      });
-    },
-    default: "close"
+      }
+    }))
   });
-  dialog.render(true);
+}
+
+async function showVisionDialog(token, hud) {
+  const currentKey = getCurrentVisionPresetKey(token);
+
+  await foundry.applications.api.DialogV2.wait({
+    window: { title: game.i18n.localize("TOKEN_LIGHTSOURCE.VISION_DIALOG.title") },
+    rejectClose: false,
+    buttons: Object.entries(VISION_PRESETS).map(([key, preset]) => ({
+      action: key,
+      icon: `<i class="${preset.icon}"></i>`,
+      label: game.i18n.localize(preset.label),
+      class: key === currentKey ? "active" : "",
+      callback: async () => {
+        await applyVisionPreset(token, key);
+        hud.render();
+      }
+    }))
+  });
 }
