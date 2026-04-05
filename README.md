@@ -73,6 +73,7 @@ A [Foundry VTT](https://foundryvtt.com/) module that adds light source and visio
 
 This module targets the FoundryVTT v13+ document API (`token.document.update()`). It does **not** support FoundryVTT v12 or earlier.
 
+
 The **Devil's Sight** vision mode requires a game system that defines it (e.g., D&D 5e via the `dnd5e` system).
 
 ---
