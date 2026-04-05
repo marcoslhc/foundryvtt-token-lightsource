@@ -16,8 +16,8 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         { src: "module.json", dest: "." },
-        { src: "styles/*.css", dest: "styles" },
-        { src: "lang/*.json", dest: "lang" }
+        { src: "styles/*.css", dest: "styles", flatten: true },
+        { src: "lang/*.json", dest: "lang", flatten: true }
       ]
     })
   ]
