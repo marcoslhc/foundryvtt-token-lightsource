@@ -53,7 +53,7 @@ export const LIGHT_PRESETS: Record<string, LightPreset> = {
       color: "#f8c377",
       alpha: 0.4,
       angle: 360,
-      animation: { type: "torch", speed: 5, intensity: 5 },
+      animation: { type: "flame", speed: 5, intensity: 5 },
     },
   },
   lantern: {
@@ -89,7 +89,7 @@ export const LIGHT_PRESETS: Record<string, LightPreset> = {
       color: "#7ecbff",
       alpha: 0.35,
       angle: 360,
-      animation: { type: "pulse", speed: 3, intensity: 3 },
+      animation: { type: "fairy", speed: 3, intensity: 3 },
     },
   },
   lightSpell: {
