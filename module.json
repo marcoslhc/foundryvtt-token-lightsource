@@ -5,7 +5,8 @@
   "version": "1.0.0",
   "authors": [
     {
-      "name": "User"
+      "name": "Marcos L Hernandez C",
+      "url": "https://github.com/marcoslhc"
     }
   ],
   "esmodules": ["scripts/main.js"],
@@ -20,5 +21,7 @@
   "compatibility": {
     "minimum": "10",
     "verified": "12"
-  }
+  },
+  "manifest": "https://github.com/marcoslhc/foundryvtt-token-lightsource/releases/latest/download/module.json",
+  "download": "https://github.com/marcoslhc/foundryvtt-token-lightsource/releases/latest/download/module.zip"
 }
