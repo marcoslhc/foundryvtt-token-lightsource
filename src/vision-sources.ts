@@ -24,8 +24,8 @@ export const VISION_PRESETS: Record<string, VisionPreset> = {
     sight: {
       enabled: false,
       range: 0,
-      visionMode: "basic"
-    }
+      visionMode: "basic",
+    },
   },
   basic: {
     label: "TOKEN_LIGHTSOURCE.VISION.basic",
@@ -33,8 +33,8 @@ export const VISION_PRESETS: Record<string, VisionPreset> = {
     sight: {
       enabled: true,
       range: 0,
-      visionMode: "basic"
-    }
+      visionMode: "basic",
+    },
   },
   darkvision30: {
     label: "TOKEN_LIGHTSOURCE.VISION.darkvision30",
@@ -42,8 +42,8 @@ export const VISION_PRESETS: Record<string, VisionPreset> = {
     sight: {
       enabled: true,
       range: 30,
-      visionMode: "darkvision"
-    }
+      visionMode: "darkvision",
+    },
   },
   darkvision60: {
     label: "TOKEN_LIGHTSOURCE.VISION.darkvision60",
@@ -51,8 +51,8 @@ export const VISION_PRESETS: Record<string, VisionPreset> = {
     sight: {
       enabled: true,
       range: 60,
-      visionMode: "darkvision"
-    }
+      visionMode: "darkvision",
+    },
   },
   darkvision120: {
     label: "TOKEN_LIGHTSOURCE.VISION.darkvision120",
@@ -60,8 +60,8 @@ export const VISION_PRESETS: Record<string, VisionPreset> = {
     sight: {
       enabled: true,
       range: 120,
-      visionMode: "darkvision"
-    }
+      visionMode: "darkvision",
+    },
   },
   devilsSight: {
     label: "TOKEN_LIGHTSOURCE.VISION.devilsSight",
@@ -69,9 +69,9 @@ export const VISION_PRESETS: Record<string, VisionPreset> = {
     sight: {
       enabled: true,
       range: 120,
-      visionMode: "devilsSight"
-    }
-  }
+      visionMode: "devilsSight",
+    },
+  },
 };
 
 /**
@@ -97,7 +97,7 @@ export function getCurrentVisionPresetKey(token: Token.Implementation): string {
     }
   }
   if (sight.enabled && sight.range === 0) return "basic";
-  return "custom";
+  return "basic";
 }
 
 /**
@@ -105,14 +105,22 @@ export function getCurrentVisionPresetKey(token: Token.Implementation): string {
  * @param token - The token placeable object
  * @param presetKey - Key from VISION_PRESETS
  */
-export async function applyVisionPreset(token: Token.Implementation, presetKey: string): Promise<void> {
+export async function applyVisionPreset(
+  token: Token.Implementation,
+  presetKey: string,
+): Promise<void> {
   const preset = VISION_PRESETS[presetKey];
   if (!preset) {
     console.warn(`token-lightsource | Unknown vision preset: ${presetKey}`);
     return;
   }
 
-  if (!token.document.canUserModify(game.user as User.Internal.Implementation, "update")) {
+  if (
+    !token.document.canUserModify(
+      game.user as User.Internal.Implementation,
+      "update",
+    )
+  ) {
     ui?.notifications?.warn(
       game.i18n?.localize("TOKEN_LIGHTSOURCE.WARN.noPermission") ?? "",
     );

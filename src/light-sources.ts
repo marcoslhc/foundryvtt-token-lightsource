@@ -75,7 +75,6 @@ export const PresetNames = [
   "dancingLights",
   "lightSpell",
   "daylight",
-  "custom",
 ] as const;
 
 export type PresetKeys = `${(typeof PresetNames)[number]}`;
@@ -184,18 +183,6 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       animation: { type: AnimationType.NONE, speed: 5, intensity: 5 },
     },
   },
-  custom: {
-    label: "TOKEN_LIGHTSOURCE.PRESET.custom",
-    icon: "fas fa-star",
-    light: {
-      dim: 0,
-      bright: 0,
-      color: null,
-      alpha: 0.5,
-      angle: 360,
-      animation: { type: AnimationType.NONE, speed: 5, intensity: 5 },
-    },
-  },
 };
 
 // Ordered cycle for left-click toggling (excludes "none" — turning on is handled via defaultPreset)
@@ -229,7 +216,7 @@ export function getCurrentPresetKey(token: Token.Implementation): PresetKeys {
     }
   }
   if (!tokenHasLight(token)) return "none";
-  return "custom";
+  return "none";
 }
 
 /**
@@ -257,7 +244,12 @@ export async function applyLightPreset(
   }
 
   // Check if user has permission to update this token
-  if (!token.document.canUserModify(game.user as User.Internal.Implementation, "update")) {
+  if (
+    !token.document.canUserModify(
+      game.user as User.Internal.Implementation,
+      "update",
+    )
+  ) {
     ui?.notifications?.warn(
       game.i18n?.localize("TOKEN_LIGHTSOURCE.WARN.noPermission") ?? "",
     );

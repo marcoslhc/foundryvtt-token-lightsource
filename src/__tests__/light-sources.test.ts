@@ -34,11 +34,6 @@ describe("tokenHasLight", () => {
 });
 
 describe("getCurrentPresetKey", () => {
-  // The "custom" preset has dim:0/bright:0, so it matches before the "none" fallback.
-  it("returns 'custom' when dim and bright are 0", () => {
-    expect(getCurrentPresetKey(makeToken(0, 0))).toBe("custom");
-  });
-
   it("matches torch preset by dim+bright", () => {
     const { dim, bright } = LIGHT_PRESETS.torch.light;
     expect(getCurrentPresetKey(makeToken(dim, bright))).toBe("torch");
@@ -47,11 +42,6 @@ describe("getCurrentPresetKey", () => {
   it("matches candle preset by dim+bright", () => {
     const { dim, bright } = LIGHT_PRESETS.candle.light;
     expect(getCurrentPresetKey(makeToken(dim, bright))).toBe("candle");
-  });
-
-  it("returns 'custom' for unknown light values", () => {
-    // dim=99 matches no preset
-    expect(getCurrentPresetKey(makeToken(99, 0.3))).toBe("custom");
   });
 });
 
@@ -65,10 +55,6 @@ describe("getNextPresetKey", () => {
   it("wraps from last item back to first", () => {
     const last = PRESET_CYCLE[PRESET_CYCLE.length - 1];
     expect(getNextPresetKey(last)).toBe(PRESET_CYCLE[0]);
-  });
-
-  it("returns 'none' for an unknown key", () => {
-    expect(getNextPresetKey("custom")).toBe("none");
   });
 });
 

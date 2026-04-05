@@ -57,12 +57,6 @@ describe("getCurrentVisionPresetKey", () => {
       getCurrentVisionPresetKey(makeVisionToken(true, range, visionMode)),
     ).toBe("devilsSight");
   });
-
-  it("returns 'custom' for unknown sight range", () => {
-    expect(
-      getCurrentVisionPresetKey(makeVisionToken(true, 45, "darkvision")),
-    ).toBe("custom");
-  });
 });
 
 describe("applyVisionPreset", () => {

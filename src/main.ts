@@ -54,84 +54,90 @@ Hooks.once("init", () => {
 
 // ─── Token HUD Hook ──────────────────────────────────────────────────────────
 
-Hooks.on(
-  "renderTokenHUD",
-  (hud: TokenHUD, html: HTMLElement) => {
-    const token = hud.object;
-    if (!token) return;
+Hooks.on("renderTokenHUD", (hud: TokenHUD, html: HTMLElement) => {
+  const token = hud.object;
+  if (!token) return;
 
-    const gmOnly = game.settings?.get(MODULE_ID, "gmOnly");
-    if (gmOnly && !(game.user as User.Internal.Implementation | null)?.isGM) return;
+  const gmOnly = game.settings?.get(MODULE_ID, "gmOnly");
+  if (gmOnly && !(game.user as User.Internal.Implementation | null)?.isGM)
+    return;
 
-    if (!token.document.canUserModify(game.user as User.Internal.Implementation, "update"))
-      return;
+  if (
+    !token.document.canUserModify(
+      game.user as User.Internal.Implementation,
+      "update",
+    )
+  )
+    return;
 
-    // ─── Light button ─────────────────────────────────────────────────────────
-    const hasLight = tokenHasLight(token);
-    const currentKey = getCurrentPresetKey(token);
+  // ─── Light button ─────────────────────────────────────────────────────────
+  const hasLight = tokenHasLight(token);
+  const currentKey = getCurrentPresetKey(token);
 
-    const button = document.createElement("div");
-    button.className = `control-icon tls-toggle${hasLight ? " active" : ""}`;
-    button.title =
-      game.i18n?.localize("TOKEN_LIGHTSOURCE.HUD.toggle") ??
-      "Toggle Light Source";
-    button.dataset.preset = currentKey;
-    // Icon markup is a hardcoded string — not user input
-    button.innerHTML = `<i class="fas fa-fire"></i>`;
+  const button = document.createElement("div");
+  button.className = `control-icon tls-toggle${hasLight ? " active" : ""}`;
+  button.title =
+    game.i18n?.localize("TOKEN_LIGHTSOURCE.HUD.toggle") ??
+    "Toggle Light Source";
+  button.dataset.preset = currentKey;
+  // Icon markup is a hardcoded string — not user input
+  button.innerHTML = `<i class="fas fa-fire"></i>`;
 
-    button.addEventListener("click", async (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      const cur = getCurrentPresetKey(token);
-      const next =
-        cur === "none"
-          ? (game.settings?.get(MODULE_ID, "defaultPreset") as PresetKeys)
-          : getNextPresetKey(cur);
-      await applyLightPreset(token, next);
-      hud.render();
-    });
+  button.addEventListener("click", async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const cur = getCurrentPresetKey(token);
+    const next =
+      cur === "none"
+        ? (game.settings?.get(MODULE_ID, "defaultPreset") as PresetKeys)
+        : getNextPresetKey(cur);
+    await applyLightPreset(token, next);
+    hud.render();
+  });
 
-    button.addEventListener("contextmenu", async (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      await showPresetDialog(token, hud);
-    });
+  button.addEventListener("contextmenu", async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    await showPresetDialog(token, hud);
+  });
 
-    // ─── Vision button ────────────────────────────────────────────────────────
-    const hasVision = tokenHasVision(token);
-    const currentVisionKey = getCurrentVisionPresetKey(token);
+  // ─── Vision button ────────────────────────────────────────────────────────
+  const hasVision = tokenHasVision(token);
+  const currentVisionKey = getCurrentVisionPresetKey(token);
 
-    const visionButton = document.createElement("div");
-    visionButton.className = `control-icon tls-vision-toggle${hasVision ? " active" : ""}`;
-    visionButton.title =
-      game.i18n?.localize("TOKEN_LIGHTSOURCE.HUD.toggleVision") ??
-      "Toggle Vision";
-    visionButton.dataset.vision = currentVisionKey;
-    visionButton.innerHTML = `<i class="fas fa-eye"></i>`;
+  const visionButton = document.createElement("div");
+  visionButton.className = `control-icon tls-vision-toggle${hasVision ? " active" : ""}`;
+  visionButton.title =
+    game.i18n?.localize("TOKEN_LIGHTSOURCE.HUD.toggleVision") ??
+    "Toggle Vision";
+  visionButton.dataset.vision = currentVisionKey;
+  visionButton.innerHTML = `<i class="fas fa-eye"></i>`;
 
-    visionButton.addEventListener("click", async (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      const cur = getCurrentVisionPresetKey(token);
-      const next = cur === "none" ? "basic" : "none";
-      await applyVisionPreset(token, next);
-      hud.render();
-    });
+  visionButton.addEventListener("click", async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const cur = getCurrentVisionPresetKey(token);
+    const next = cur === "none" ? "basic" : "none";
+    await applyVisionPreset(token, next);
+    hud.render();
+  });
 
-    visionButton.addEventListener("contextmenu", async (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      await showVisionDialog(token, hud);
-    });
+  visionButton.addEventListener("contextmenu", async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    await showVisionDialog(token, hud);
+  });
 
-    html.querySelector(".col.right")?.prepend(visionButton);
-    html.querySelector(".col.right")?.prepend(button);
-  },
-);
+  html.querySelector(".col.right")?.prepend(visionButton);
+  html.querySelector(".col.right")?.prepend(button);
+});
 
 // ─── Preset Picker Dialogs ───────────────────────────────────────────────────
 
-async function showPresetDialog(token: Token.Implementation, hud: TokenHUD): Promise<void> {
+async function showPresetDialog(
+  token: Token.Implementation,
+  hud: TokenHUD,
+): Promise<void> {
   const currentKey = getCurrentPresetKey(token);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -153,7 +159,10 @@ async function showPresetDialog(token: Token.Implementation, hud: TokenHUD): Pro
   });
 }
 
-async function showVisionDialog(token: Token.Implementation, hud: TokenHUD): Promise<void> {
+async function showVisionDialog(
+  token: Token.Implementation,
+  hud: TokenHUD,
+): Promise<void> {
   const currentKey = getCurrentVisionPresetKey(token);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
