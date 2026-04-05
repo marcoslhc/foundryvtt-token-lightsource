@@ -2,7 +2,7 @@
 
 A [Foundry VTT](https://foundryvtt.com/) module that adds light source and vision controls directly to the Token HUD, eliminating the need for macros.
 
-**Compatible with:** FoundryVTT v10, v11, v12
+**Compatible with:** FoundryVTT v13+
 
 ---
 
@@ -71,7 +71,7 @@ A [Foundry VTT](https://foundryvtt.com/) module that adds light source and visio
 
 ## Compatibility
 
-This module uses the FoundryVTT v10+ document API (`token.document.update()`). It does **not** support FoundryVTT v9 or earlier.
+This module targets the FoundryVTT v13+ document API (`token.document.update()`). It does **not** support FoundryVTT v12 or earlier.
 
 The **Devil's Sight** vision mode requires a game system that defines it (e.g., D&D 5e via the `dnd5e` system).
 

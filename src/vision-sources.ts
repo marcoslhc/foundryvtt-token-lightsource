@@ -77,14 +77,14 @@ export const VISION_PRESETS: Record<string, VisionPreset> = {
 /**
  * Returns true if the token currently has vision enabled.
  */
-export function tokenHasVision(token: Token): boolean {
+export function tokenHasVision(token: Token.Implementation): boolean {
   return token.document.sight?.enabled === true;
 }
 
 /**
  * Gets the key of the currently active vision preset, or "none".
  */
-export function getCurrentVisionPresetKey(token: Token): string {
+export function getCurrentVisionPresetKey(token: Token.Implementation): string {
   const sight = token.document.sight;
   if (!sight?.enabled) return "none";
   for (const [key, preset] of Object.entries(VISION_PRESETS)) {
@@ -105,14 +105,14 @@ export function getCurrentVisionPresetKey(token: Token): string {
  * @param token - The token placeable object
  * @param presetKey - Key from VISION_PRESETS
  */
-export async function applyVisionPreset(token: Token, presetKey: string): Promise<void> {
+export async function applyVisionPreset(token: Token.Implementation, presetKey: string): Promise<void> {
   const preset = VISION_PRESETS[presetKey];
   if (!preset) {
     console.warn(`token-lightsource | Unknown vision preset: ${presetKey}`);
     return;
   }
 
-  if (!token.document.canUserModify(game.user!, "update")) {
+  if (!token.document.canUserModify(game.user as User.Internal.Implementation, "update")) {
     ui?.notifications?.warn(
       game.i18n?.localize("TOKEN_LIGHTSOURCE.WARN.noPermission") ?? "",
     );

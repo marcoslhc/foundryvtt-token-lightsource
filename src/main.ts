@@ -56,16 +56,14 @@ Hooks.once("init", () => {
 
 Hooks.on(
   "renderTokenHUD",
-  (hud: Application, html: HTMLElement, _data: object) => {
-    const token =
-      (hud as { token?: Token; object?: Token }).token ??
-      (hud as { token?: Token; object?: Token }).object;
+  (hud: TokenHUD, html: HTMLElement) => {
+    const token = hud.object;
     if (!token) return;
 
     const gmOnly = game.settings?.get(MODULE_ID, "gmOnly");
-    if (gmOnly && !game.user?.isGM) return;
+    if (gmOnly && !(game.user as User.Internal.Implementation | null)?.isGM) return;
 
-    if (!game.user || !token.document.canUserModify(game.user, "update"))
+    if (!token.document.canUserModify(game.user as User.Internal.Implementation, "update"))
       return;
 
     // ─── Light button ─────────────────────────────────────────────────────────
@@ -90,13 +88,13 @@ Hooks.on(
           ? (game.settings?.get(MODULE_ID, "defaultPreset") as PresetKeys)
           : getNextPresetKey(cur);
       await applyLightPreset(token, next);
-      (hud as TokenHUD).render();
+      hud.render();
     });
 
     button.addEventListener("contextmenu", async (event) => {
       event.preventDefault();
       event.stopPropagation();
-      await showPresetDialog(token, hud as TokenHUD);
+      await showPresetDialog(token, hud);
     });
 
     // ─── Vision button ────────────────────────────────────────────────────────
@@ -117,13 +115,13 @@ Hooks.on(
       const cur = getCurrentVisionPresetKey(token);
       const next = cur === "none" ? "basic" : "none";
       await applyVisionPreset(token, next);
-      (hud as TokenHUD).render();
+      hud.render();
     });
 
     visionButton.addEventListener("contextmenu", async (event) => {
       event.preventDefault();
       event.stopPropagation();
-      await showVisionDialog(token, hud as TokenHUD);
+      await showVisionDialog(token, hud);
     });
 
     html.querySelector(".col.right")?.prepend(visionButton);
@@ -133,7 +131,7 @@ Hooks.on(
 
 // ─── Preset Picker Dialogs ───────────────────────────────────────────────────
 
-async function showPresetDialog(token: Token, hud: TokenHUD): Promise<void> {
+async function showPresetDialog(token: Token.Implementation, hud: TokenHUD): Promise<void> {
   const currentKey = getCurrentPresetKey(token);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -155,7 +153,7 @@ async function showPresetDialog(token: Token, hud: TokenHUD): Promise<void> {
   });
 }
 
-async function showVisionDialog(token: Token, hud: TokenHUD): Promise<void> {
+async function showVisionDialog(token: Token.Implementation, hud: TokenHUD): Promise<void> {
   const currentKey = getCurrentVisionPresetKey(token);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

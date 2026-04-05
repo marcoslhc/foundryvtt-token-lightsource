@@ -7,8 +7,18 @@
     "strict": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
-    "types": ["@league-of-foundry-developers/foundry-vtt-types"]
+    "types": ["@league-of-foundry-developers/foundry-vtt-types/lenient"],
+    "baseUrl": ".",
+    "paths": {
+      "fvtt-types": [
+        "./node_modules/@league-of-foundry-developers/foundry-vtt-types/src/index.d.mts"
+      ],
+      "fvtt-types/*": [
+        "./node_modules/@league-of-foundry-developers/foundry-vtt-types/src/*/index.d.mts",
+        "./node_modules/@league-of-foundry-developers/foundry-vtt-types/src/*"
+      ]
+    },
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
+  "exclude": ["node_modules", "dist", "src/__tests__", "src/__mocks__"],
 }

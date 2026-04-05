@@ -209,7 +209,7 @@ export const PRESET_CYCLE: PresetKeys[] = [
 /**
  * Determines if a token currently has any light enabled.
  */
-export function tokenHasLight(token: Token): boolean {
+export function tokenHasLight(token: Token.Implementation): boolean {
   const light = token.document.light;
   return light.dim > 0 || light.bright > 0;
 }
@@ -217,7 +217,7 @@ export function tokenHasLight(token: Token): boolean {
 /**
  * Gets the key of the currently active preset on a token, or "none".
  */
-export function getCurrentPresetKey(token: Token): PresetKeys {
+export function getCurrentPresetKey(token: Token.Implementation): PresetKeys {
   const light = token.document.light;
   for (const [key, preset] of Object.entries(LIGHT_PRESETS)) {
     if (key === "none") continue;
@@ -247,7 +247,7 @@ export function getNextPresetKey(currentKey: PresetKeys): PresetKeys {
  * @param presetKey - Key from LIGHT_PRESETS
  */
 export async function applyLightPreset(
-  token: Token,
+  token: Token.Implementation,
   presetKey: PresetKeys,
 ): Promise<void> {
   const preset = LIGHT_PRESETS[presetKey];
@@ -257,7 +257,7 @@ export async function applyLightPreset(
   }
 
   // Check if user has permission to update this token
-  if (!token.document.canUserModify(game.user!, "update")) {
+  if (!token.document.canUserModify(game.user as User.Internal.Implementation, "update")) {
     ui?.notifications?.warn(
       game.i18n?.localize("TOKEN_LIGHTSOURCE.WARN.noPermission") ?? "",
     );

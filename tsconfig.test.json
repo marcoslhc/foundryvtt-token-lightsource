@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": [
+      "@league-of-foundry-developers/foundry-vtt-types/lenient",
+      "@types/jest"
+    ]
+  },
+  "include": ["src/**/*.ts"]
+}
