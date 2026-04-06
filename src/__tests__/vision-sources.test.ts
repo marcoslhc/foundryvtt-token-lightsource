@@ -13,7 +13,7 @@ function makeVisionToken(enabled: boolean, range = 0, visionMode = "basic") {
       canUserModify: jest.fn<() => boolean>().mockReturnValue(true),
       update: jest.fn<() => Promise<void>>(),
     },
-  };
+  } as unknown as Token.Implementation;
 }
 
 describe("tokenHasVision", () => {

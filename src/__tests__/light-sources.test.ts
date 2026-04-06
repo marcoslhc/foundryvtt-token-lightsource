@@ -1,6 +1,7 @@
 import { jest } from "@jest/globals";
 import {
   LIGHT_PRESETS,
+  LightPreset,
   PRESET_CYCLE,
   tokenHasLight,
   getCurrentPresetKey,
@@ -8,7 +9,7 @@ import {
   applyLightPreset,
 } from "../light-sources.js";
 
-// Helper: build a minimal Token-like object
+// Helper: build a minimal Token-like object with only dim/bright set
 function makeToken(dim: number, bright: number) {
   return {
     document: {
@@ -16,7 +17,18 @@ function makeToken(dim: number, bright: number) {
       canUserModify: jest.fn<() => boolean>().mockReturnValue(true),
       update: jest.fn<() => Promise<void>>(),
     },
-  };
+  } as unknown as Token.Implementation;
+}
+
+// Helper: build a Token-like object with a full light preset applied
+function makeTokenWithLight(light: LightPreset["light"]) {
+  return {
+    document: {
+      light,
+      canUserModify: jest.fn<() => boolean>().mockReturnValue(true),
+      update: jest.fn<() => Promise<void>>(),
+    },
+  } as unknown as Token.Implementation;
 }
 
 describe("tokenHasLight", () => {
@@ -34,14 +46,12 @@ describe("tokenHasLight", () => {
 });
 
 describe("getCurrentPresetKey", () => {
-  it("matches torch preset by dim+bright", () => {
-    const { dim, bright } = LIGHT_PRESETS.torch.light;
-    expect(getCurrentPresetKey(makeToken(dim, bright))).toBe("torch");
+  it("matches torch preset", () => {
+    expect(getCurrentPresetKey(makeTokenWithLight(LIGHT_PRESETS.torch.light))).toBe("torch");
   });
 
-  it("matches candle preset by dim+bright", () => {
-    const { dim, bright } = LIGHT_PRESETS.candle.light;
-    expect(getCurrentPresetKey(makeToken(dim, bright))).toBe("candle");
+  it("matches candle preset", () => {
+    expect(getCurrentPresetKey(makeTokenWithLight(LIGHT_PRESETS.candle.light))).toBe("candle");
   });
 });
 
