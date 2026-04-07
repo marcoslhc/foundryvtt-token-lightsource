@@ -4,7 +4,7 @@ import { isEqual, merge } from "./utils";
 export interface LightSourceData {
   alpha: number;
   bright: number;
-  color: string | null;
+  color: Color | null;
   angle: number;
   dim: number;
 
@@ -24,7 +24,7 @@ export interface LightSourceData {
 export class TokenLightSource {
   alpha: number;
   bright: number;
-  color: string | null;
+  color: Color | null;
   angle: number;
   dim: number;
   animation: TokenLightAnimation;
@@ -48,7 +48,7 @@ export class TokenLightSource {
   ) {
     this.alpha = data.alpha ?? 0.5;
     this.bright = data.bright ?? 13;
-    this.color = data.color ?? "#FE9C69";
+    this.color = data.color ?? Color.fromString("#FE9C69");
     this.angle = data.angle ?? 360;
     this.dim = data.dim ?? 8;
 

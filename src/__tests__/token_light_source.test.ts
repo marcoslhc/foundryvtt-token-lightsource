@@ -7,7 +7,7 @@ describe("TokenLightSource", () => {
       {
         alpha: 1,
         bright: 1,
-        color: "#ff0000",
+        color: Color.fromString("#ff0000"),
         angle: 360,
         dim: 8,
         animation: TokenLightAnimation.fromData({
@@ -19,7 +19,7 @@ describe("TokenLightSource", () => {
       {
         alpha: 1,
         bright: 1,
-        color: "#ff0000",
+        color: Color.fromString("#ff0000"),
         angle: 360,
         dim: 8,
         animation: TokenLightAnimation.fromData({
@@ -34,7 +34,7 @@ describe("TokenLightSource", () => {
       {
         alpha: 1,
         bright: 1,
-        color: "#ff0000",
+        color: Color.fromString("#ff0000"),
         angle: 360,
         dim: 8,
         animation: TokenLightAnimation.fromData({
@@ -46,7 +46,7 @@ describe("TokenLightSource", () => {
       {
         alpha: 1,
         bright: 1,
-        color: "#ff0000",
+        color: Color.fromString("#ff0000"),
         angle: 360,
         dim: 8,
         animation: TokenLightAnimation.fromData({

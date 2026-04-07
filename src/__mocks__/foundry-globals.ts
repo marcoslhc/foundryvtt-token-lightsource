@@ -18,3 +18,11 @@
 (globalThis as Record<string, unknown>).foundry = {
   applications: { api: { DialogV2: { wait: async () => {} } } },
 };
+
+(globalThis as Record<string, unknown>).Color = {
+  fromString: (color: string) => ({ r: 0, g: 0, b: 0, a: 1 }),
+};
+
+declare namespace Token {
+  type Implementation = {};
+}

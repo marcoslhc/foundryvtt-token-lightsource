@@ -47,7 +47,7 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       dim: 10,
       bright: 0.5,
       attenuation: 1,
-      color: "#ff9329",
+      color: Color.fromString("#ff9329"),
       alpha: 0.4,
       angle: 360,
       animation: { type: AnimationType.TORCH, speed: 2, intensity: 2 },
@@ -60,7 +60,7 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       dim: 40,
       bright: 0.7,
       attenuation: 1,
-      color: "#f8c377",
+      color: Color.fromString("#f8c377"),
       alpha: 0.4,
       angle: 360,
       animation: { type: AnimationType.FLAME, speed: 3, intensity: 4 },
@@ -73,7 +73,7 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       dim: 60,
       bright: 0.7,
       attenuation: 1,
-      color: "#ffd27d",
+      color: Color.fromString("#ffd27d"),
       alpha: 0.4,
       angle: 360,
       animation: { type: AnimationType.PULSE, speed: 2, intensity: 2 },
@@ -86,7 +86,7 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       dim: 120,
       bright: 1,
       attenuation: 0,
-      color: "#ffeedd",
+      color: Color.fromString("#ffeedd"),
       alpha: 0.5,
       angle: 52,
       animation: { type: AnimationType.NONE, speed: 5, intensity: 5 },
@@ -99,7 +99,7 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       dim: 20,
       bright: 0.7,
       attenuation: 1,
-      color: "#7ecbff",
+      color: Color.fromString("#7ecbff"),
       alpha: 0.35,
       angle: 360,
       animation: { type: AnimationType.FAIRY, speed: 3, intensity: 3 },
@@ -112,7 +112,7 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       dim: 40,
       bright: 0.5,
       attenuation: 1,
-      color: "#fffae0",
+      color: Color.fromString("#fffae0"),
       alpha: 0.45,
       angle: 360,
       animation: { type: AnimationType.PULSE, speed: 3, intensity: 2 },
@@ -125,7 +125,7 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       dim: 60,
       bright: 1,
       attenuation: 0,
-      color: "#ffffff",
+      color: Color.fromString("#ffffff"),
       alpha: 0.5,
       angle: 360,
       animation: { type: AnimationType.NONE, speed: 5, intensity: 5 },
@@ -235,5 +235,7 @@ export async function applyLightPreset(
     },
   };
 
-  await token.document.update(updateData);
+  await token.document.update(
+    updateData as unknown as TokenDocument.UpdateData,
+  );
 }
