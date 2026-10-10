@@ -1,5 +1,9 @@
 import { LightSourceData, TokenLightSource } from "./token_light_source";
-import { AnimationOptions, AnimationType } from "./token_light_animation";
+import {
+  AnimationOptions,
+  AnimationType,
+  TokenLightAnimation,
+} from "./token_light_animation";
 // Light source presets and manager for token-lightsource module
 
 /**
@@ -37,7 +41,11 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       color: null,
       alpha: 0.5,
       angle: 360,
-      animation: { type: AnimationType.NONE, speed: 5, intensity: 5 },
+      animation: TokenLightAnimation.fromData({
+        type: AnimationType.NONE,
+        speed: 5,
+        intensity: 5,
+      }),
     }),
   },
   candle: {
@@ -50,7 +58,11 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       color: Color.fromString("#ff9329"),
       alpha: 0.4,
       angle: 360,
-      animation: { type: AnimationType.TORCH, speed: 2, intensity: 2 },
+      animation: TokenLightAnimation.fromData({
+        type: AnimationType.TORCH,
+        speed: 2,
+        intensity: 2,
+      }),
     }),
   },
   torch: {
@@ -63,7 +75,11 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       color: Color.fromString("#f8c377"),
       alpha: 0.4,
       angle: 360,
-      animation: { type: AnimationType.FLAME, speed: 3, intensity: 4 },
+      animation: TokenLightAnimation.fromData({
+        type: AnimationType.FLAME,
+        speed: 3,
+        intensity: 4,
+      }),
     }),
   },
   lantern: {
@@ -76,7 +92,11 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       color: Color.fromString("#ffd27d"),
       alpha: 0.4,
       angle: 360,
-      animation: { type: AnimationType.PULSE, speed: 2, intensity: 2 },
+      animation: TokenLightAnimation.fromData({
+        type: AnimationType.PULSE,
+        speed: 2,
+        intensity: 2,
+      }),
     }),
   },
   bullseye: {
@@ -89,7 +109,11 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       color: Color.fromString("#ffeedd"),
       alpha: 0.5,
       angle: 52,
-      animation: { type: AnimationType.NONE, speed: 5, intensity: 5 },
+      animation: TokenLightAnimation.fromData({
+        type: AnimationType.NONE,
+        speed: 5,
+        intensity: 5,
+      }),
     }),
   },
   dancingLights: {
@@ -102,7 +126,11 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       color: Color.fromString("#7ecbff"),
       alpha: 0.35,
       angle: 360,
-      animation: { type: AnimationType.FAIRY, speed: 3, intensity: 3 },
+      animation: TokenLightAnimation.fromData({
+        type: AnimationType.FAIRY,
+        speed: 3,
+        intensity: 3,
+      }),
     }),
   },
   lightSpell: {
@@ -115,7 +143,11 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       color: Color.fromString("#fffae0"),
       alpha: 0.45,
       angle: 360,
-      animation: { type: AnimationType.PULSE, speed: 3, intensity: 2 },
+      animation: TokenLightAnimation.fromData({
+        type: AnimationType.PULSE,
+        speed: 3,
+        intensity: 2,
+      }),
     }),
   },
   daylight: {
@@ -128,7 +160,11 @@ export const LIGHT_PRESETS: Record<PresetKeys, LightPreset> = {
       color: Color.fromString("#ffffff"),
       alpha: 0.5,
       angle: 360,
-      animation: { type: AnimationType.NONE, speed: 5, intensity: 5 },
+      animation: TokenLightAnimation.fromData({
+        type: AnimationType.NONE,
+        speed: 5,
+        intensity: 5,
+      }),
     }),
   },
 };

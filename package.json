@@ -7,15 +7,28 @@
     "build": "vite build",
     "dev": "vite build --watch",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "prepare": "lefthook install",
     "version": "node scripts/sync-version.mjs && git add module.json",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "^21.2.3",
+    "@eslint/js": "^10.0.1",
+    "@jest/globals": "^30.5.2",
     "@league-of-foundry-developers/foundry-vtt-types": "^13.340.1",
     "@types/jest": "^30.0.0",
+    "commitlint": "^21.2.3",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
     "jest": "^30.3.0",
+    "lefthook": "^2.2.0",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.9",
     "ts-jest": "^29.4.9",
     "typescript": "^5.4.0",
+    "typescript-eslint": "^8.71.1",
     "vite": "^8.0.3",
     "vite-plugin-static-copy": "^4.0.1"
   }

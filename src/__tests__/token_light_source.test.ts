@@ -60,7 +60,7 @@ describe("TokenLightSource", () => {
   ])(
     "should run is %p isEqual over %p and return %s",
     (first, second, expected) => {
-      expect(TokenLightSource.fromData(first).isEqual(second)).toBe(true);
+      expect(TokenLightSource.fromData(first).isEqual(second)).toBe(expected);
     },
   );
 });
