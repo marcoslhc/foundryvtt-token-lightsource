@@ -1,3 +1,7 @@
+export interface Animated {
+  animation: AnimationOptions | TokenLightAnimation;
+}
+
 export interface AnimationOptions {
   type: AnimationType;
   speed: number;
@@ -44,6 +48,7 @@ export class TokenLightAnimation {
     this.reverse = data.reverse ?? false;
   }
   static fromData(data: TokenLightAnimation | AnimationOptions) {
+    if (data instanceof TokenLightAnimation) return data;
     return new TokenLightAnimation(data);
   }
   isEqual(other: TokenLightAnimation | AnimationOptions) {

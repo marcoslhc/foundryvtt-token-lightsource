@@ -1,4 +1,4 @@
-import { TokenLightAnimation, AnimationOptions } from "./token_light_animation";
+import { TokenLightAnimation, Animated } from "./token_light_animation";
 import { isEqual, merge } from "./utils";
 
 export interface LightSourceData {
@@ -41,11 +41,7 @@ export class TokenLightSource {
   rotation?: number;
   walls?: boolean;
 
-  constructor(
-    data: LightSourceData & {
-      animation: AnimationOptions | TokenLightAnimation;
-    },
-  ) {
+  constructor(data: LightSourceData & Animated) {
     this.alpha = data.alpha ?? 0.5;
     this.bright = data.bright ?? 13;
     this.color = data.color ?? Color.fromString("#FE9C69");
@@ -66,17 +62,14 @@ export class TokenLightSource {
 
     this.animation = TokenLightAnimation.fromData(data.animation);
   }
-  static fromData(data: LightSourceData & { animation: AnimationOptions }) {
+  static fromData(data: LightSourceData & Animated) {
     return new TokenLightSource(data);
   }
   merge(other: TokenLightSource): TokenLightSource {
     return TokenLightSource.fromData(merge<TokenLightSource>(this, other));
   }
 
-  isEqual(
-    other:
-      (LightSourceData & { animation: AnimationOptions }) | TokenLightSource,
-  ) {
+  isEqual(other: (LightSourceData & Animated) | TokenLightSource) {
     // Normalize raw data so defaults are applied on both sides before comparing.
     const normalized =
       other instanceof TokenLightSource

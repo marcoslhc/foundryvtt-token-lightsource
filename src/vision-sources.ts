@@ -7,71 +7,134 @@
  * Note: "devilsSight" visionMode requires D&D 5e or a system that defines it.
  */
 
+enum VISION_PRESET_LABELS {
+  NONE = "TOKEN_LIGHTSOURCE.VISION.none",
+  BASIC = "TOKEN_LIGHTSOURCE.VISION.basic",
+  DARKVISION30 = "TOKEN_LIGHTSOURCE.VISION.darkvision30",
+  DARKVISION60 = "TOKEN_LIGHTSOURCE.VISION.darkvision60",
+  DARKVISION120 = "TOKEN_LIGHTSOURCE.VISION.darkvision120",
+  DEVILS_SIGHT = "TOKEN_LIGHTSOURCE.VISION.devilsSight",
+}
+
+enum VISION_MODES {
+  BASIC = "basic",
+  DARKVISION = "darkvision",
+  DEVILS_SIGHT = "devilsSight",
+}
+
+interface SightPreset {
+  enabled: boolean;
+  range: number;
+  visionMode: VISION_MODES;
+}
+
 interface VisionPreset {
-  label: string;
+  label: VISION_PRESET_LABELS;
   icon: string;
-  sight: {
-    enabled: boolean;
-    range: number;
-    visionMode: string;
-  };
+  sight: SightPreset;
+}
+
+class SightPresetImplementation implements SightPreset {
+  enabled: boolean;
+  range: number;
+  visionMode: VISION_MODES;
+
+  constructor(enabled: boolean, range: number, visionMode: VISION_MODES) {
+    this.enabled = enabled;
+    this.range = range;
+    this.visionMode = visionMode;
+  }
+
+  static fromData(data: SightPreset): SightPresetImplementation {
+    if (data instanceof SightPresetImplementation) return data;
+    return new SightPresetImplementation(
+      data.enabled,
+      data.range,
+      data.visionMode,
+    );
+  }
+}
+
+class VisionPresetImplementation implements VisionPreset {
+  label: VISION_PRESET_LABELS;
+  icon: string;
+  sight: SightPreset;
+
+  constructor(
+    label: VISION_PRESET_LABELS,
+    icon: string,
+    sight: VisionPreset["sight"],
+  ) {
+    this.label = label;
+    this.icon = icon;
+    this.sight = sight;
+  }
+
+  static fromData(data: VisionPreset): VisionPresetImplementation {
+    if (data instanceof VisionPresetImplementation) return data;
+    return new VisionPresetImplementation(
+      data.label,
+      data.icon,
+      SightPresetImplementation.fromData(data.sight),
+    );
+  }
 }
 
 export const VISION_PRESETS: Record<string, VisionPreset> = {
-  none: {
-    label: "TOKEN_LIGHTSOURCE.VISION.none",
+  none: VisionPresetImplementation.fromData({
+    label: VISION_PRESET_LABELS.NONE,
     icon: "fas fa-eye-slash",
     sight: {
       enabled: false,
       range: 0,
-      visionMode: "basic",
+      visionMode: VISION_MODES.BASIC,
     },
-  },
-  basic: {
-    label: "TOKEN_LIGHTSOURCE.VISION.basic",
+  }),
+  basic: VisionPresetImplementation.fromData({
+    label: VISION_PRESET_LABELS.BASIC,
     icon: "fas fa-eye",
     sight: {
       enabled: true,
       range: 0,
-      visionMode: "basic",
+      visionMode: VISION_MODES.BASIC,
     },
-  },
-  darkvision30: {
-    label: "TOKEN_LIGHTSOURCE.VISION.darkvision30",
+  }),
+  darkvision30: VisionPresetImplementation.fromData({
+    label: VISION_PRESET_LABELS.DARKVISION30,
     icon: "fas fa-moon",
     sight: {
       enabled: true,
       range: 30,
-      visionMode: "darkvision",
+      visionMode: VISION_MODES.DARKVISION,
     },
-  },
-  darkvision60: {
-    label: "TOKEN_LIGHTSOURCE.VISION.darkvision60",
+  }),
+  darkvision60: VisionPresetImplementation.fromData({
+    label: VISION_PRESET_LABELS.DARKVISION60,
     icon: "fas fa-moon",
     sight: {
       enabled: true,
       range: 60,
-      visionMode: "darkvision",
+      visionMode: VISION_MODES.DARKVISION,
     },
-  },
-  darkvision120: {
-    label: "TOKEN_LIGHTSOURCE.VISION.darkvision120",
+  }),
+  darkvision120: VisionPresetImplementation.fromData({
+    label: VISION_PRESET_LABELS.DARKVISION120,
     icon: "fas fa-moon",
     sight: {
       enabled: true,
       range: 120,
-      visionMode: "darkvision",
+      visionMode: VISION_MODES.DARKVISION,
     },
-  },
-  devilsSight: {
-    label: "TOKEN_LIGHTSOURCE.VISION.devilsSight",
+  }),
+  devilsSight: VisionPresetImplementation.fromData({
+    label: VISION_PRESET_LABELS.DEVILS_SIGHT,
     icon: "fas fa-eye",
     sight: {
       enabled: true,
       range: 120,
-      visionMode: "devilsSight",
+      visionMode: VISION_MODES.DEVILS_SIGHT,
     },
-  },
+  }),
 };
 
 /**
@@ -127,10 +190,10 @@ export async function applyVisionPreset(
     return;
   }
 
-  const updateData: Record<string, unknown> = {
+  const updatedData: Record<string, unknown> = {
     "sight.enabled": preset.sight.enabled,
     "sight.range": preset.sight.range,
     "sight.visionMode": preset.sight.visionMode,
   };
-  await token.document.update(updateData);
+  await token.document.update(updatedData);
 }
