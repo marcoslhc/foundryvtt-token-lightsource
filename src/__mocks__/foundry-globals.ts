@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 // Minimal FoundryVTT global stubs for Jest — only the fields read by pure functions.
 
 (globalThis as Record<string, unknown>).Hooks = {
@@ -20,9 +21,9 @@
 };
 
 (globalThis as Record<string, unknown>).Color = {
-  fromString: (color: string) => ({ r: 0, g: 0, b: 0, a: 1 }),
+  fromString: () => ({ r: 0, g: 0, b: 0, a: 1 }),
 };
 
-declare namespace Token {
-  type Implementation = {};
+export declare namespace Token {
+  type Implementation = object;
 }

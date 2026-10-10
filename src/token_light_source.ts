@@ -75,9 +75,13 @@ export class TokenLightSource {
 
   isEqual(
     other:
-      | (LightSourceData & { animation: AnimationOptions })
-      | TokenLightSource,
+      (LightSourceData & { animation: AnimationOptions }) | TokenLightSource,
   ) {
-    return isEqual(this, other);
+    // Normalize raw data so defaults are applied on both sides before comparing.
+    const normalized =
+      other instanceof TokenLightSource
+        ? other
+        : TokenLightSource.fromData(other);
+    return isEqual(this, normalized);
   }
 }

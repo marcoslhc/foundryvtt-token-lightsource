@@ -15,15 +15,16 @@ export function isEqual(a: unknown, b: unknown): boolean {
     const objAWithIsEqual = aObj[p] as {
       isEqual?: (other: unknown) => boolean;
     };
-    const objBWithIsEqual = aObj[p] as {
+    const objBWithIsEqual = bObj[p] as {
       isEqual?: (other: unknown) => boolean;
     };
 
     if (
-      typeof objAWithIsEqual.isEqual === "function" &&
-      typeof objBWithIsEqual.isEqual === "function"
+      typeof objAWithIsEqual?.isEqual === "function" &&
+      typeof objBWithIsEqual?.isEqual === "function"
     ) {
-      return objAWithIsEqual.isEqual(objBWithIsEqual);
+      if (!objAWithIsEqual.isEqual(objBWithIsEqual)) return false;
+      continue;
     }
     if (!isEqual(aObj[p], bObj[p])) return false;
   }

@@ -1,0 +1,23 @@
+# Git hooks — https://lefthook.dev/configuration/
+#
+# pre-commit runs sequentially (parallel: false) on purpose: lint-staged
+# rewrites and re-stages files, so jest must run afterwards against the
+# final content instead of racing with it.
+
+commit-msg:
+  jobs:
+    # Enforce Conventional Commits (see commitlint.config.js)
+    - name: commitlint
+      run: pnpm exec commitlint --edit {1}
+
+pre-commit:
+  parallel: false
+  jobs:
+    # eslint --fix + prettier --write on staged files (see .lintstagedrc.json)
+    - name: lint-staged
+      run: pnpm exec lint-staged
+
+    # Only tests related to the staged source/test files (jest --findRelatedTests)
+    - name: jest (changed files)
+      glob: "*.{ts,js}"
+      run: pnpm test --findRelatedTests --passWithNoTests {staged_files}
